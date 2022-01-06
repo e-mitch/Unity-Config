@@ -11,6 +11,7 @@ public class TabletopControls : MonoBehaviour
     private DropdownControls dropdownControls;
     private List<List<float>> dimensionPairs;
     private LegControls legControls;
+    public Material material1;//here to demo applying material
 
     //Set tabletop as the tabletop being used by the dropdown
     private void Start()
@@ -20,6 +21,7 @@ public class TabletopControls : MonoBehaviour
         dropdownControls = dropdownObject.GetComponent<DropdownControls>();
         dropdownControls.tabletopObject = gameObject;
         legControls = GetComponent<LegControls>();
+        GetComponent<Renderer>().material = material1; //here to demo applying material
        
     }
 
