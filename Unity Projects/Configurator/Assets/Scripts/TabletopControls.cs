@@ -11,25 +11,67 @@ public class TabletopControls : MonoBehaviour
     private DropdownControls dropdownControls;
     private List<List<float>> dimensionPairs;
     private LegControls legControls;
-    public Material material1;//here to demo applying material
+    public Material selectedItemMaterial;
+    bool selected;
+    public GameObject doneButton;
+    private DoneButtonControls doneButtonControls;
+    public Material setMaterial;
+    public bool doneEditing;
+    private Material selectedMaterial;
 
     //Set tabletop as the tabletop being used by the dropdown
     private void Start()
     {
-        //Set tabletop as the tabletop being used by the dropdown
+        GetComponent<Renderer>().material = setMaterial;
+        selectedMaterial = setMaterial;
+        doneButtonControls = doneButton.GetComponent<DoneButtonControls>();
         dropdown = dropdownObject.GetComponent<Dropdown>();
         dropdownControls = dropdownObject.GetComponent<DropdownControls>();
         dropdownControls.tabletopObject = gameObject;
         legControls = GetComponent<LegControls>();
-        GetComponent<Renderer>().material = material1; //here to demo applying material
+        selected = false;
        
+    }
+
+
+    //Move the table position according to user input
+    private void Update()
+    {
+        Debug.Log(doneEditing);
+        if (selected)
+        {
+            doneEditing = Input.GetKeyDown(KeyCode.Return);
+            if (doneEditing)
+            { 
+                selected = false;
+
+            }
+            doneButton.gameObject.SetActive(true);
+            GetComponent<Renderer>().material = selectedItemMaterial;
+            float moveSpeed = 0.05f;
+            float horizontalInput = Input.GetAxis("Horizontal");
+            float verticalInput = Input.GetAxis("Vertical");
+            if(horizontalInput != 0 || verticalInput != 0)
+            {
+                Vector3 changeVector = new Vector3(horizontalInput * moveSpeed, 0, verticalInput * moveSpeed);
+                transform.position += changeVector;
+                //legControls.ShiftLegs(changeVector);
+            }
+        }
+        else
+        {
+            GetComponent<Renderer>().material = setMaterial;
+        }
     }
 
     //Make the dropdown active/visible
     private void OnMouseDown()
     {
         dropdownObject.SetActive(true);
+        selected = true;
+        legControls.selected = true;
     }
+
 
     //Create a list of lists where each sublist is a pair of x/z coordinates representing a possible table size
     public List<List<float>> CreateDimensionPairs()
@@ -42,6 +84,7 @@ public class TabletopControls : MonoBehaviour
         return pairs;
     }
 
+    
 
     //Grow/shrink dimensions to match dropdown selection
     public void updateDimensions(List<float> newXZDimensions)
@@ -79,7 +122,7 @@ public class TabletopControls : MonoBehaviour
                 transform.localScale -= new Vector3(0, 0, growRate);
             }
         }
-        legControls.updateLegPositions();
+        legControls.UpdateLegPositions();
 
     }
   
