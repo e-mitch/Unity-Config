@@ -7,34 +7,16 @@ public class DropdownControls : MonoBehaviour
 {
     private List<string> dropdownValues = new List<string>();
     Dropdown dropdown;
-    public GameObject tabletopObject;
     private int selectedIndex;
     private TabletopControls tabletopControls;
-    private List<List<float>> generatedDimensions;
+    public List<List<float>> generatedDimensions;
+    public GameObject activeObject;
 
-    
-    void Start()
-    {
-        tabletopControls = tabletopObject.GetComponent<TabletopControls>();
-        generatedDimensions = CreateValues();
-        PopulateValues(generatedDimensions);
-        
-    }
-
-    //Get value pairs from active table GameObject
-    private List<List<float>> CreateValues()
-    {
-        return tabletopControls.CreateDimensionPairs();
-    }
-
-    void Update()
-    {
-        
-    }
-
+   
     //Format and populate values in dropdown
-    public void PopulateValues(List<List<float>> dimensions)
+    public void PopulateValues()
     {
+        tabletopControls = activeObject.GetComponent<TabletopControls>();
         dropdown = gameObject.GetComponent<Dropdown>();
         dropdown.ClearOptions();
         foreach (List<float> pair in generatedDimensions)

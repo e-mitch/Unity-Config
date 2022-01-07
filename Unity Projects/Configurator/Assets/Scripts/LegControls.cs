@@ -4,28 +4,33 @@ using UnityEngine;
 
 public class LegControls : MonoBehaviour
 {
-    private Vector3 tableScale;
+    public Vector3 tableScale; //make this private again
     private Vector3 tablePos;
     private float legOffset;
     private Vector3 legScale;
-    public List<GameObject> legs;
-    public bool selected;
+    public GameObject[] legs;
+    public List<GameObject> legPrefabs;
     public List<Material> materialOptions;
+    public bool isSelected;
+    int legType = 0;
+    private TabletopControls tabletopControls;
     
     // Start is called before the first frame update
     void Start()
     {
+        //position issue won't be a problem once we get timing right; tabletop first, then legs
         tableScale = transform.localScale;
         tablePos = transform.position;
-        legScale = legs[0].transform.localScale;
-        legOffset = legs[0].transform.localScale.x / 2;
-
+        tabletopControls = GetComponent<TabletopControls>();
     }
 
     // Update is called once per frame
     void LateUpdate()
-    { 
-        if (selected)
+    {
+        tableScale = transform.localScale;
+        tablePos = transform.position;
+
+        if (isSelected)
         {
             float moveSpeed = 0.05f;
             float horizontalInput = Input.GetAxis("Horizontal");
@@ -52,16 +57,19 @@ public class LegControls : MonoBehaviour
 
     public void UpdateLegPositions()
     {
+        legScale = legs[0].transform.localScale;
+        legOffset = legScale.x / 2;
         tableScale = transform.localScale;
         tablePos = transform.position;
+        Debug.Log(tablePos);
         List<Vector3> legPositions = GetLegPositions();
-        for (int i = 0; i < legs.Count; i++)
+        for (int i = 0; i < legs.Length; i++)
         {
             legs[i].transform.position = legPositions[i];
         }
     }
 
-    List<Vector3> GetLegPositions()
+    private  List<Vector3> GetLegPositions()
     {
         List<Vector3> positions = new List<Vector3>();
         Vector3 brPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / 2), -((tablePos.z - tableScale.z / 2)) - legOffset);
@@ -74,5 +82,6 @@ public class LegControls : MonoBehaviour
         positions.Add(flPos);
         return positions;
     }
+
 
 }

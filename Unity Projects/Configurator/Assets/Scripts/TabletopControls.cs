@@ -12,41 +12,36 @@ public class TabletopControls : MonoBehaviour
     private List<List<float>> dimensionPairs;
     private LegControls legControls;
     public Material selectedItemMaterial;
-    bool selected;
-    public GameObject doneButton;
-    private DoneButtonControls doneButtonControls;
+    public bool selected = false;
     public Material setMaterial;
     public bool doneEditing;
     private Material selectedMaterial;
+    public bool hasLegs = false;
 
     //Set tabletop as the tabletop being used by the dropdown
     private void Start()
     {
+        legControls = GetComponent<LegControls>();
         GetComponent<Renderer>().material = setMaterial;
         selectedMaterial = setMaterial;
-        doneButtonControls = doneButton.GetComponent<DoneButtonControls>();
-        dropdown = dropdownObject.GetComponent<Dropdown>();
-        dropdownControls = dropdownObject.GetComponent<DropdownControls>();
-        dropdownControls.tabletopObject = gameObject;
-        legControls = GetComponent<LegControls>();
         selected = false;
-       
+        
     }
-
 
     //Move the table position according to user input
     private void Update()
     {
-        Debug.Log(doneEditing);
+
         if (selected)
         {
+          
             doneEditing = Input.GetKeyDown(KeyCode.Return);
             if (doneEditing)
-            { 
+            {
                 selected = false;
+                //work here to clear dropdown
 
             }
-            doneButton.gameObject.SetActive(true);
             GetComponent<Renderer>().material = selectedItemMaterial;
             float moveSpeed = 0.05f;
             float horizontalInput = Input.GetAxis("Horizontal");
@@ -60,16 +55,26 @@ public class TabletopControls : MonoBehaviour
         }
         else
         {
+            Debug.Log("hit else");
             GetComponent<Renderer>().material = setMaterial;
+            legControls.isSelected = false;
         }
     }
 
     //Make the dropdown active/visible
     private void OnMouseDown()
     {
-        dropdownObject.SetActive(true);
-        selected = true;
-        legControls.selected = true;
+        if (hasLegs)
+        {
+            dropdownObject = GameObject.FindGameObjectWithTag("dropdown");
+            dropdownControls = dropdownObject.GetComponent<DropdownControls>();
+            dropdownControls.activeObject = gameObject;
+            dropdownControls.generatedDimensions = CreateDimensionPairs();
+            dropdownControls.PopulateValues();
+            selected = true;
+            legControls.isSelected = true;
+        }
+        
     }
 
 
