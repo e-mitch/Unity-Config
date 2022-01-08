@@ -16,13 +16,15 @@ public class TabletopControls : MonoBehaviour
     public Material setMaterial;
     public bool doneEditing;
     private Material selectedMaterial;
+    public Dropdown dropdownPrefab;
+    
     public bool hasLegs = false;
 
     //Set tabletop as the tabletop being used by the dropdown
     private void Start()
     {
         legControls = GetComponent<LegControls>();
-        GetComponent<Renderer>().material = setMaterial;
+        setMaterial = GetComponent<Renderer>().material;
         selectedMaterial = setMaterial;
         selected = false;
         
@@ -31,18 +33,24 @@ public class TabletopControls : MonoBehaviour
     //Move the table position according to user input
     private void Update()
     {
-
         if (selected)
         {
-          
             doneEditing = Input.GetKeyDown(KeyCode.Return);
             if (doneEditing)
             {
                 selected = false;
-                //work here to clear dropdown
-
+                //dropdown = GameObject.Find("SizeDropdown").GetComponent<Dropdown>();
+                //dropdown.options.Clear();
+                //dropdown.GetComponent<DropdownControls>().filled = false;
+                //dropdown.gameObject.SetActive(false);
+                Destroy(GameObject.FindGameObjectWithTag("dropdown"));
+                GetComponent<Renderer>().material = setMaterial;
+                EditControls editControls = GameObject.Find("EditTools").GetComponent<EditControls>();
+                CameraControls cameraControls = GameObject.Find("Main Camera").GetComponent<CameraControls>();
+                cameraControls.selectedObject = null;
+                cameraControls.Reset();
             }
-            GetComponent<Renderer>().material = selectedItemMaterial;
+            //GetComponent<Renderer>().material = selectedItemMaterial;
             float moveSpeed = 0.05f;
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
@@ -66,6 +74,9 @@ public class TabletopControls : MonoBehaviour
     {
         if (hasLegs)
         {
+            CameraControls cameraControls = GameObject.Find("Main Camera").GetComponent<CameraControls>();
+            cameraControls.selectedObject = this.gameObject;
+            Instantiate(dropdownPrefab, GameObject.Find("EditTools").transform);
             dropdownObject = GameObject.FindGameObjectWithTag("dropdown");
             dropdownControls = dropdownObject.GetComponent<DropdownControls>();
             dropdownControls.activeObject = gameObject;
@@ -73,6 +84,9 @@ public class TabletopControls : MonoBehaviour
             dropdownControls.PopulateValues();
             selected = true;
             legControls.isSelected = true;
+            EditControls editControls = GameObject.Find("EditTools").GetComponent<EditControls>();
+            editControls.editing = true;
+            editControls.selectedGameObject = this.gameObject;
         }
         
     }
@@ -130,6 +144,5 @@ public class TabletopControls : MonoBehaviour
         legControls.UpdateLegPositions();
 
     }
-  
 }
 

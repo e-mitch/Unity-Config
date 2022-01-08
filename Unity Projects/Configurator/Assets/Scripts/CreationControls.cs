@@ -18,6 +18,8 @@ public class CreationControls : MonoBehaviour
     private LegControls legControls;
     private Vector3 tablePos;
     private Vector3 tableScale;
+    public Button newSceneButton;
+
 
     // Add listeners to buttons in create panel
     void Start()
@@ -26,9 +28,13 @@ public class CreationControls : MonoBehaviour
         squareTableButton.GetComponent<Button>().onClick.AddListener(InstantiateSquare);
         squareLegsButton.GetComponent<Button>().onClick.AddListener(InstantiateSquareLegs);
         //roundLegsButton.GetComponent<Button>().onClick.AddListener(InstantiateRoundLegs);
+        newSceneButton.GetComponent<Button>().onClick.AddListener(ReloadScene);
     }
 
-
+    void ReloadScene()
+    {
+        Application.LoadLevel(Application.loadedLevel);
+    }
     //Instantiate rectangle tabletop and activate leg option buttons
     void InstantiateRectangle()
     {
@@ -106,4 +112,15 @@ public class CreationControls : MonoBehaviour
         createTools.SetActive(false);
         editTools.SetActive(true);
     }
+
+    void switchToWood()
+    {
+
+    }
+
+    void switchToPlastic()
+    {
+
+    }
 }
+

@@ -11,6 +11,7 @@ public class DropdownControls : MonoBehaviour
     private TabletopControls tabletopControls;
     public List<List<float>> generatedDimensions;
     public GameObject activeObject;
+    public bool filled = false;
 
    
     //Format and populate values in dropdown
@@ -18,23 +19,28 @@ public class DropdownControls : MonoBehaviour
     {
         tabletopControls = activeObject.GetComponent<TabletopControls>();
         dropdown = gameObject.GetComponent<Dropdown>();
-        dropdown.ClearOptions();
-        foreach (List<float> pair in generatedDimensions)
+        if (!filled)
         {
-            string currentPair = pair[0] * 100f + "x" + pair[1] * 100f + "cm";
-            dropdownValues.Add(currentPair);
-        }
+            foreach (List<float> pair in generatedDimensions)
+            {
+                string currentPair = pair[0] * 100f + "x" + pair[1] * 100f + "cm";
+                dropdownValues.Add(currentPair);
+            }
 
-        foreach (string item in dropdownValues)
-        {
-            dropdown.options.Add(new Dropdown.OptionData() { text = item });
+            foreach (string item in dropdownValues)
+            {
+                dropdown.options.Add(new Dropdown.OptionData() { text = item });
+            }
+            dropdown.onValueChanged.AddListener(delegate
+            {
+                DropdownValueChanged(dropdown);
+            });
         }
-        dropdown.onValueChanged.AddListener(delegate
-        {
-            DropdownValueChanged(dropdown);
-        });
+        
+        filled = true;
 
     }
+
 
     //When dropdown value is changed, calls tabletop's updateDimensions function
     void DropdownValueChanged(Dropdown change)
