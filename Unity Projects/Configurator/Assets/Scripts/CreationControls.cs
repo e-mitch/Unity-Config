@@ -19,6 +19,7 @@ public class CreationControls : MonoBehaviour
     private Vector3 tablePos;
     private Vector3 tableScale;
     public Button newSceneButton;
+    private TabletopControls tabletopControls;
 
 
     // Add listeners to buttons in create panel
@@ -28,7 +29,7 @@ public class CreationControls : MonoBehaviour
         rectTableButton.GetComponent<Button>().onClick.AddListener(InstantiateRectangle);
         squareTableButton.GetComponent<Button>().onClick.AddListener(InstantiateSquare);
         squareLegsButton.GetComponent<Button>().onClick.AddListener(InstantiateSquareLegs);
-        //roundLegsButton.GetComponent<Button>().onClick.AddListener(InstantiateRoundLegs);
+        roundLegsButton.GetComponent<Button>().onClick.AddListener(InstantiateRoundLegs);
         newSceneButton.GetComponent<Button>().onClick.AddListener(ReloadScene);
     }
 
@@ -42,6 +43,7 @@ public class CreationControls : MonoBehaviour
         Instantiate(rectTablePrefab, tablePos, rectTablePrefab.transform.rotation);
         tableScale = GameObject.FindGameObjectWithTag("tabletop").transform.localScale;
         ActivateLegButtons();
+        tabletopControls = GameObject.FindGameObjectWithTag("tabletop").GetComponent<TabletopControls>();
     }
 
     //Instantiate square tabletop and activate leg option buttons
@@ -50,7 +52,7 @@ public class CreationControls : MonoBehaviour
         Instantiate(squareTablePrefab, tablePos, squareTablePrefab.transform.rotation);
         tableScale = GameObject.FindGameObjectWithTag("tabletop").transform.localScale;
         ActivateLegButtons();
-        
+        tabletopControls = GameObject.FindGameObjectWithTag("tabletop").GetComponent<TabletopControls>();
     }
 
     //Actives leg buttons and defines leg controls
@@ -64,46 +66,48 @@ public class CreationControls : MonoBehaviour
     //Instantiates square legs under tabletop
     void InstantiateSquareLegs()
     { 
-        List<Vector3> positions = GetLegPositions(squareLegPrefab.transform.localScale.x/2, squareLegPrefab.transform.localScale);
+        List<Vector3> positions = GetLegPositions(squareLegPrefab.transform.localScale.x/2, squareLegPrefab.transform.localScale, 2);
 
         for (int i = 0; i < 4; i++)
         {
             Instantiate(squareLegPrefab, positions[i], squareLegPrefab.transform.rotation);
 
         }
-        TabletopControls tabletopControls = GameObject.FindGameObjectWithTag("tabletop").GetComponent<TabletopControls>();
-        GameObject.FindGameObjectWithTag("tabletop").GetComponent<LegControls>().legs = GameObject.FindGameObjectsWithTag("leg");
         tabletopControls.hasLegs = true;
+        LegControls legControls = GameObject.FindGameObjectWithTag("tabletop").GetComponent<LegControls>();
+        legControls.legs = GameObject.FindGameObjectsWithTag("leg");
+        legControls.yDivider = 2;
         ActivateEditPanel();
 
     }
 
-    //Doesn't work yet; no round leg prefab
-    /*void InstantiateRoundLegs()
+    void InstantiateRoundLegs()
     {
-        List<Vector3> positions = GetLegPositions(squareLegPrefab.transform.localScale.x / 2, squareLegPrefab.transform.localScale);
+        List<Vector3> positions = GetLegPositions(roundLegPrefab.transform.localScale.x / 2, roundLegPrefab.transform.localScale, 1);
 
         for (int i = 0; i < 4; i++)
         {
             Instantiate(roundLegPrefab, positions[i], roundLegPrefab.transform.rotation);
-
         }
-
-    }*/
+        tabletopControls.hasLegs = true;
+        LegControls legControls = GameObject.FindGameObjectWithTag("tabletop").GetComponent<LegControls>();
+        legControls.legs = GameObject.FindGameObjectsWithTag("leg");
+        legControls.yDivider = 1;
+        ActivateEditPanel();
+    }
 
 
     //Generates leg positions
-    public List<Vector3> GetLegPositions(float legOffset, Vector3 legScale)
+    public List<Vector3> GetLegPositions(float legOffset, Vector3 legScale, int yDivider)
     {
         List<Vector3> positions = new List<Vector3>();
-        Debug.Log(tableScale);
-        Vector3 brPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / 2), -((tablePos.z - tableScale.z / 2)) - legOffset);
+        Vector3 brPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / yDivider), -((tablePos.z - tableScale.z / 2)) - legOffset);
         positions.Add(brPos);
-        Vector3 frPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / 2), ((tablePos.z - tableScale.z / 2)) + legOffset);
+        Vector3 frPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / yDivider), ((tablePos.z - tableScale.z / 2)) + legOffset);
         positions.Add(frPos);
-        Vector3 blPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / 2), -((tablePos.z - tableScale.z / 2)) - legOffset);
+        Vector3 blPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / yDivider), -((tablePos.z - tableScale.z / 2)) - legOffset);
         positions.Add(blPos);
-        Vector3 flPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / 2), ((tablePos.z - tableScale.z / 2)) + legOffset);
+        Vector3 flPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / yDivider), ((tablePos.z - tableScale.z / 2)) + legOffset);
         positions.Add(flPos);
         return positions;
     }
@@ -113,16 +117,6 @@ public class CreationControls : MonoBehaviour
     {
         createTools.SetActive(false);
         editTools.SetActive(true);
-    }
-
-    void switchToWood()
-    {
-
-    }
-
-    void switchToPlastic()
-    {
-
     }
 }
 

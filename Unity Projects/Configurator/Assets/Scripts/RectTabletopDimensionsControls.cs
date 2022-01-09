@@ -14,12 +14,7 @@ public class RectTabletopDimensionsControls : MonoBehaviour
         tabletopControls.dimensionPairs = CreateRectDimensionPairs();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    //Generates possible dimension pairs for tabletop
     private List<List<float>> CreateRectDimensionPairs()
     {
         List<List<float>> pairs = new List<List<float>>();
@@ -29,5 +24,4 @@ public class RectTabletopDimensionsControls : MonoBehaviour
 
         return pairs;
     }
-
 }

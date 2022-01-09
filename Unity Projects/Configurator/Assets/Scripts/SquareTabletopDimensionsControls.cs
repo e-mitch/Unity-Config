@@ -12,12 +12,7 @@ public class SquareTabletopDimensionsControls : MonoBehaviour
         tabletopControls.dimensionPairs = CreateSquareDimensionPairs();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    //Generates possible dimension pairs for tabletop
     private List<List<float>> CreateSquareDimensionPairs()
     {
         List<List<float>> pairs = new List<List<float>>();

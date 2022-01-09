@@ -62,7 +62,6 @@ public class TabletopControls : MonoBehaviour
         }
         else
         {
-            Debug.Log("hit else");
             GetComponent<Renderer>().material = setMaterial;
             legControls.isSelected = false;
         }
@@ -81,7 +80,6 @@ public class TabletopControls : MonoBehaviour
             dropdownControls.activeObject = gameObject;
             //dropdownControls.generatedDimensions = CreateDimensionPairs();
             dropdownControls.generatedDimensions = dimensionPairs;
-            Debug.Log(dimensionPairs[0][0]);
             dropdownControls.PopulateValues();
             selected = true;
             legControls.isSelected = true;

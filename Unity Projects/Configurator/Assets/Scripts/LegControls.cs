@@ -14,11 +14,11 @@ public class LegControls : MonoBehaviour
     public bool isSelected;
     int legType = 0;
     private TabletopControls tabletopControls;
+    public int yDivider;
     
     // Start is called before the first frame update
     void Start()
     {
-        //position issue won't be a problem once we get timing right; tabletop first, then legs
         tableScale = transform.localScale;
         tablePos = transform.position;
         tabletopControls = GetComponent<TabletopControls>();
@@ -46,6 +46,7 @@ public class LegControls : MonoBehaviour
         }
     }
 
+    //Moves legs by adding a vector to their position
     public void ShiftLegs(Vector3 shiftValues)
     {
         foreach(GameObject leg in legs)
@@ -54,14 +55,13 @@ public class LegControls : MonoBehaviour
         }
     }
 
-
+    //Updates leg positions to stay oriented with table
     public void UpdateLegPositions()
     {
         legScale = legs[0].transform.localScale;
         legOffset = legScale.x / 2;
         tableScale = transform.localScale;
         tablePos = transform.position;
-        Debug.Log(tablePos);
         List<Vector3> legPositions = GetLegPositions();
         for (int i = 0; i < legs.Length; i++)
         {
@@ -69,16 +69,17 @@ public class LegControls : MonoBehaviour
         }
     }
 
+    //Generates positions for legs according to table size/position
     private  List<Vector3> GetLegPositions()
     {
         List<Vector3> positions = new List<Vector3>();
-        Vector3 brPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / 2), -((tablePos.z - tableScale.z / 2)) - legOffset);
+        Vector3 brPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / yDivider), -((tablePos.z - tableScale.z / 2)) - legOffset);
         positions.Add(brPos);
-        Vector3 frPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / 2), ((tablePos.z - tableScale.z / 2)) + legOffset);
+        Vector3 frPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / yDivider), ((tablePos.z - tableScale.z / 2)) + legOffset);
         positions.Add(frPos);
-        Vector3 blPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / 2), -((tablePos.z - tableScale.z / 2)) - legOffset);
+        Vector3 blPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / yDivider), -((tablePos.z - tableScale.z / 2)) - legOffset);
         positions.Add(blPos);
-        Vector3 flPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / 2), ((tablePos.z - tableScale.z / 2)) + legOffset);
+        Vector3 flPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / yDivider), ((tablePos.z - tableScale.z / 2)) + legOffset);
         positions.Add(flPos);
         return positions;
     }
