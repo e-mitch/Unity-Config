@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CreationControls : MonoBehaviour
 {
@@ -35,8 +36,9 @@ public class CreationControls : MonoBehaviour
 
     void ReloadScene()
     {
-        Application.LoadLevel(Application.loadedLevel);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
+
     //Instantiate rectangle tabletop and activate leg option buttons
     void InstantiateRectangle()
     {
@@ -63,8 +65,8 @@ public class CreationControls : MonoBehaviour
         legControls = GameObject.FindGameObjectWithTag("tabletop").GetComponent<LegControls>();
     }
 
-    //Instantiates square legs under tabletop
-    void InstantiateSquareLegs()
+    //Instantiates square legs at each corner of the tabletop
+    public void InstantiateSquareLegs()
     { 
         List<Vector3> positions = GetLegPositions(squareLegPrefab.transform.localScale.x/2, squareLegPrefab.transform.localScale, 2);
 
@@ -74,14 +76,13 @@ public class CreationControls : MonoBehaviour
 
         }
         tabletopControls.hasLegs = true;
-        LegControls legControls = GameObject.FindGameObjectWithTag("tabletop").GetComponent<LegControls>();
-        legControls.legs = GameObject.FindGameObjectsWithTag("leg");
         legControls.yDivider = 2;
         ActivateEditPanel();
 
     }
 
-    void InstantiateRoundLegs()
+    //Instantiates round legs at each corner of the tabletop
+    public void InstantiateRoundLegs()
     {
         List<Vector3> positions = GetLegPositions(roundLegPrefab.transform.localScale.x / 2, roundLegPrefab.transform.localScale, 1);
 
@@ -90,8 +91,6 @@ public class CreationControls : MonoBehaviour
             Instantiate(roundLegPrefab, positions[i], roundLegPrefab.transform.rotation);
         }
         tabletopControls.hasLegs = true;
-        LegControls legControls = GameObject.FindGameObjectWithTag("tabletop").GetComponent<LegControls>();
-        legControls.legs = GameObject.FindGameObjectsWithTag("leg");
         legControls.yDivider = 1;
         ActivateEditPanel();
     }

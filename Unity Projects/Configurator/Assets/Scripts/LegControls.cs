@@ -19,11 +19,16 @@ public class LegControls : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        legs = GameObject.FindGameObjectsWithTag("leg");
         tableScale = transform.localScale;
         tablePos = transform.position;
         tabletopControls = GetComponent<TabletopControls>();
     }
 
+    private void Update()
+    {
+        legs = GameObject.FindGameObjectsWithTag("leg");
+    }
     // Update is called once per frame
     void LateUpdate()
     {
