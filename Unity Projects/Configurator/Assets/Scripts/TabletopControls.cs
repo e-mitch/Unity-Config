@@ -9,7 +9,7 @@ public class TabletopControls : MonoBehaviour
     public GameObject dropdownObject;
     private Dropdown dropdown;
     private DropdownControls dropdownControls;
-    private List<List<float>> dimensionPairs;
+    public List<List<float>> dimensionPairs;
     private LegControls legControls;
     public Material selectedItemMaterial;
     public bool selected = false;
@@ -27,7 +27,6 @@ public class TabletopControls : MonoBehaviour
         setMaterial = GetComponent<Renderer>().material;
         selectedMaterial = setMaterial;
         selected = false;
-        
     }
 
     //Move the table position according to user input
@@ -80,7 +79,9 @@ public class TabletopControls : MonoBehaviour
             dropdownObject = GameObject.FindGameObjectWithTag("dropdown");
             dropdownControls = dropdownObject.GetComponent<DropdownControls>();
             dropdownControls.activeObject = gameObject;
-            dropdownControls.generatedDimensions = CreateDimensionPairs();
+            //dropdownControls.generatedDimensions = CreateDimensionPairs();
+            dropdownControls.generatedDimensions = dimensionPairs;
+            Debug.Log(dimensionPairs[0][0]);
             dropdownControls.PopulateValues();
             selected = true;
             legControls.isSelected = true;
@@ -91,19 +92,6 @@ public class TabletopControls : MonoBehaviour
         
     }
 
-
-    //Create a list of lists where each sublist is a pair of x/z coordinates representing a possible table size
-    public List<List<float>> CreateDimensionPairs()
-    {
-        List<List<float>> pairs = new List<List<float>>();
-        pairs.Add(new List<float> { 2, 1 });
-        pairs.Add(new List<float> { 2, 1.2f});
-        pairs.Add(new List<float> { 2.2f, 1.2f});
-
-        return pairs;
-    }
-
-    
 
     //Grow/shrink dimensions to match dropdown selection
     public void updateDimensions(List<float> newXZDimensions)

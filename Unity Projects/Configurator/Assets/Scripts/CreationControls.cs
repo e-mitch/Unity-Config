@@ -24,6 +24,7 @@ public class CreationControls : MonoBehaviour
     // Add listeners to buttons in create panel
     void Start()
     {
+        tablePos = new Vector3(0, 1.05f, 0);
         rectTableButton.GetComponent<Button>().onClick.AddListener(InstantiateRectangle);
         squareTableButton.GetComponent<Button>().onClick.AddListener(InstantiateSquare);
         squareLegsButton.GetComponent<Button>().onClick.AddListener(InstantiateSquareLegs);
@@ -38,7 +39,6 @@ public class CreationControls : MonoBehaviour
     //Instantiate rectangle tabletop and activate leg option buttons
     void InstantiateRectangle()
     {
-        tablePos = new Vector3(0, 1.05f, 0);
         Instantiate(rectTablePrefab, tablePos, rectTablePrefab.transform.rotation);
         tableScale = GameObject.FindGameObjectWithTag("tabletop").transform.localScale;
         ActivateLegButtons();
@@ -47,8 +47,10 @@ public class CreationControls : MonoBehaviour
     //Instantiate square tabletop and activate leg option buttons
     void InstantiateSquare()
     {
+        Instantiate(squareTablePrefab, tablePos, squareTablePrefab.transform.rotation);
+        tableScale = GameObject.FindGameObjectWithTag("tabletop").transform.localScale;
         ActivateLegButtons();
-        //Add code to instantiate square tabletop
+        
     }
 
     //Actives leg buttons and defines leg controls
