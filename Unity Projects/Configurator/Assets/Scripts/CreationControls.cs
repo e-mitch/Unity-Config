@@ -17,8 +17,8 @@ public class CreationControls : MonoBehaviour
     public GameObject createTools;
     public GameObject editTools;
     private LegControls legControls;
-    private Vector3 tablePos;
-    private Vector3 tableScale;
+    public Vector3 tablePos;
+    public Vector3 tableScale;
     public Button newSceneButton;
     private TabletopControls tabletopControls;
 
@@ -34,6 +34,8 @@ public class CreationControls : MonoBehaviour
         newSceneButton.GetComponent<Button>().onClick.AddListener(ReloadScene);
     }
 
+
+    //Reloads current scene
     void ReloadScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -43,7 +45,6 @@ public class CreationControls : MonoBehaviour
     void InstantiateRectangle()
     {
         Instantiate(rectTablePrefab, tablePos, rectTablePrefab.transform.rotation);
-        tableScale = GameObject.FindGameObjectWithTag("tabletop").transform.localScale;
         ActivateLegButtons();
         tabletopControls = GameObject.FindGameObjectWithTag("tabletop").GetComponent<TabletopControls>();
     }
@@ -52,7 +53,6 @@ public class CreationControls : MonoBehaviour
     void InstantiateSquare()
     {
         Instantiate(squareTablePrefab, tablePos, squareTablePrefab.transform.rotation);
-        tableScale = GameObject.FindGameObjectWithTag("tabletop").transform.localScale;
         ActivateLegButtons();
         tabletopControls = GameObject.FindGameObjectWithTag("tabletop").GetComponent<TabletopControls>();
     }
@@ -67,7 +67,9 @@ public class CreationControls : MonoBehaviour
 
     //Instantiates square legs at each corner of the tabletop
     public void InstantiateSquareLegs()
-    { 
+    {
+        tableScale = GameObject.FindGameObjectWithTag("tabletop").transform.localScale;
+        tablePos = GameObject.FindGameObjectWithTag("tabletop").transform.localPosition;
         List<Vector3> positions = GetLegPositions(squareLegPrefab.transform.localScale.x/2, squareLegPrefab.transform.localScale, 2);
 
         for (int i = 0; i < 4; i++)
@@ -78,12 +80,14 @@ public class CreationControls : MonoBehaviour
         tabletopControls.hasLegs = true;
         legControls.yDivider = 2;
         ActivateEditPanel();
-
     }
+
 
     //Instantiates round legs at each corner of the tabletop
     public void InstantiateRoundLegs()
     {
+        tableScale = GameObject.FindGameObjectWithTag("tabletop").transform.localScale;
+        tablePos = GameObject.FindGameObjectWithTag("tabletop").transform.localPosition;
         List<Vector3> positions = GetLegPositions(roundLegPrefab.transform.localScale.x / 2, roundLegPrefab.transform.localScale, 1);
 
         for (int i = 0; i < 4; i++)
@@ -96,15 +100,15 @@ public class CreationControls : MonoBehaviour
     }
 
 
-    //Generates leg positions
+    //Generate leg positions. Ydivider accounts for the difference in y-positioning of cylinder and cube GameObjects
     public List<Vector3> GetLegPositions(float legOffset, Vector3 legScale, int yDivider)
     {
         List<Vector3> positions = new List<Vector3>();
-        Vector3 brPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / yDivider), -((tablePos.z - tableScale.z / 2)) - legOffset);
+        Vector3 brPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / yDivider), ((tablePos.z + tableScale.z / 2)) - legOffset);
         positions.Add(brPos);
         Vector3 frPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / yDivider), ((tablePos.z - tableScale.z / 2)) + legOffset);
         positions.Add(frPos);
-        Vector3 blPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / yDivider), -((tablePos.z - tableScale.z / 2)) - legOffset);
+        Vector3 blPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / yDivider), ((tablePos.z + tableScale.z / 2)) - legOffset);
         positions.Add(blPos);
         Vector3 flPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / yDivider), ((tablePos.z - tableScale.z / 2)) + legOffset);
         positions.Add(flPos);

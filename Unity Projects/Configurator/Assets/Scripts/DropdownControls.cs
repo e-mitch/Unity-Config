@@ -46,7 +46,7 @@ public class DropdownControls : MonoBehaviour
     void DropdownValueChanged(Dropdown change)
     {
         selectedIndex = change.value;
-        tabletopControls.updateDimensions(generatedDimensions[selectedIndex]);
+        tabletopControls.UpdateDimensions(generatedDimensions[selectedIndex]);
     }
         
  }

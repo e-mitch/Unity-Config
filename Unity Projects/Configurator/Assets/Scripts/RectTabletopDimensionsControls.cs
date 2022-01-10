@@ -7,7 +7,7 @@ public class RectTabletopDimensionsControls : MonoBehaviour
 
     private TabletopControls tabletopControls;
 
-    // Start is called before the first frame update
+    //Sets possible dimensions of tabletop
     void Start()
     {
         tabletopControls = GetComponent<TabletopControls>();

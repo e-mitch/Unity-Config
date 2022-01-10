@@ -2,20 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+//Todo: don't let tables go through walls
 public class TabletopControls : MonoBehaviour
 {
-
-    public GameObject dropdownObject;
-    private Dropdown dropdown;
     private DropdownControls dropdownControls;
     public List<List<float>> dimensionPairs;
     private LegControls legControls;
     public Material selectedItemMaterial;
     public bool selected = false;
-    public Material setMaterial;
     public bool doneEditing;
-    private Material selectedMaterial;
     public Dropdown dropdownPrefab;
     
     public bool hasLegs = false;
@@ -24,8 +19,6 @@ public class TabletopControls : MonoBehaviour
     private void Start()
     {
         legControls = GetComponent<LegControls>();
-        setMaterial = GetComponent<Renderer>().material;
-        selectedMaterial = setMaterial;
         selected = false;
     }
 
@@ -38,18 +31,16 @@ public class TabletopControls : MonoBehaviour
             if (doneEditing)
             {
                 selected = false;
-                //dropdown = GameObject.Find("SizeDropdown").GetComponent<Dropdown>();
-                //dropdown.options.Clear();
-                //dropdown.GetComponent<DropdownControls>().filled = false;
-                //dropdown.gameObject.SetActive(false);
+                //Destroy size dropdown
                 Destroy(GameObject.FindGameObjectWithTag("dropdown"));
-                GetComponent<Renderer>().material = setMaterial;
-                EditControls editControls = GameObject.Find("EditTools").GetComponent<EditControls>();
+
+                //Reset camera position
                 CameraControls cameraControls = GameObject.Find("Main Camera").GetComponent<CameraControls>();
                 cameraControls.selectedObject = null;
                 cameraControls.Reset();
             }
-            //GetComponent<Renderer>().material = selectedItemMaterial;
+
+            //Move tabletop according to keyboard input
             float moveSpeed = 0.05f;
             float horizontalInput = Input.GetAxis("Horizontal");
             float verticalInput = Input.GetAxis("Vertical");
@@ -62,7 +53,6 @@ public class TabletopControls : MonoBehaviour
         }
         else
         {
-            GetComponent<Renderer>().material = setMaterial;
             legControls.isSelected = false;
         }
     }
@@ -72,17 +62,25 @@ public class TabletopControls : MonoBehaviour
     {
         if (hasLegs)
         {
+            //Zoom in on selected object
             CameraControls cameraControls = GameObject.Find("Main Camera").GetComponent<CameraControls>();
             cameraControls.selectedObject = this.gameObject;
-            Instantiate(dropdownPrefab, GameObject.Find("EditTools").transform);
-            dropdownObject = GameObject.FindGameObjectWithTag("dropdown");
-            dropdownControls = dropdownObject.GetComponent<DropdownControls>();
-            dropdownControls.activeObject = gameObject;
-            //dropdownControls.generatedDimensions = CreateDimensionPairs();
-            dropdownControls.generatedDimensions = dimensionPairs;
-            dropdownControls.PopulateValues();
+
+            //Instantiate size options dropdown and set its values
+            if(GameObject.FindGameObjectsWithTag("dropdown").Length == 0)
+            {
+                Instantiate(dropdownPrefab, GameObject.Find("EditTools").transform);
+                dropdownControls = GameObject.FindGameObjectWithTag("dropdown").GetComponent<DropdownControls>();
+                dropdownControls.activeObject = gameObject;
+                dropdownControls.generatedDimensions = dimensionPairs;
+                dropdownControls.PopulateValues();
+            }
+            
+
             selected = true;
             legControls.isSelected = true;
+
+            //Tells edit controls what object is being edited
             EditControls editControls = GameObject.Find("EditTools").GetComponent<EditControls>();
             editControls.editing = true;
             editControls.selectedGameObject = this.gameObject;
@@ -92,7 +90,7 @@ public class TabletopControls : MonoBehaviour
 
 
     //Grow/shrink dimensions to match dropdown selection
-    public void updateDimensions(List<float> newXZDimensions)
+    public void UpdateDimensions(List<float> newXZDimensions)
     {
         float newX = newXZDimensions[0];
         float newZ = newXZDimensions[1];
@@ -128,7 +126,6 @@ public class TabletopControls : MonoBehaviour
             }
         }
         legControls.UpdateLegPositions();
-
     }
 }
 

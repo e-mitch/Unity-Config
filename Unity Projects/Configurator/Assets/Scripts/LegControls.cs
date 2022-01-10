@@ -12,24 +12,22 @@ public class LegControls : MonoBehaviour
     public List<GameObject> legPrefabs;
     public List<Material> materialOptions;
     public bool isSelected;
-    int legType = 0;
-    private TabletopControls tabletopControls;
     public int yDivider;
     
-    // Start is called before the first frame update
+    //Get legs and get tabletop information
     void Start()
     {
         legs = GameObject.FindGameObjectsWithTag("leg");
         tableScale = transform.localScale;
         tablePos = transform.position;
-        tabletopControls = GetComponent<TabletopControls>();
     }
 
     private void Update()
     {
         legs = GameObject.FindGameObjectsWithTag("leg");
     }
-    // Update is called once per frame
+
+    //Move legs based on keyboard input
     void LateUpdate()
     {
         tableScale = transform.localScale;
@@ -42,11 +40,14 @@ public class LegControls : MonoBehaviour
             float verticalInput = Input.GetAxis("Vertical");
             if (horizontalInput != 0 || verticalInput != 0)
             {
-                Vector3 changeVector = new Vector3(horizontalInput * moveSpeed, 0, verticalInput * moveSpeed);
-                foreach (GameObject leg in legs)
+                if(legs.Length != 0)
                 {
-                    leg.transform.position += changeVector;
-                }
+                    Vector3 changeVector = new Vector3(horizontalInput * moveSpeed, 0, verticalInput * moveSpeed);
+                    foreach (GameObject leg in legs)
+                    {
+                        leg.transform.position += changeVector;
+                    }
+                } 
             }
         }
     }
@@ -72,17 +73,19 @@ public class LegControls : MonoBehaviour
         {
             legs[i].transform.position = legPositions[i];
         }
+       
     }
 
-    //Generates positions for legs according to table size/position
-    private  List<Vector3> GetLegPositions()
+    //Generates positions for legs according to table size/position. yDivider accounts for the difference in y-positioning of cylinders and cubes.
+    private List<Vector3> GetLegPositions()
     {
+        Debug.Log("yDivider: " + yDivider);
         List<Vector3> positions = new List<Vector3>();
-        Vector3 brPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / yDivider), -((tablePos.z - tableScale.z / 2)) - legOffset);
+        Vector3 brPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / yDivider), ((tablePos.z + tableScale.z / 2)) - legOffset);
         positions.Add(brPos);
         Vector3 frPos = new Vector3(((tablePos.x + tableScale.x / 2) - legOffset), (legScale.y / yDivider), ((tablePos.z - tableScale.z / 2)) + legOffset);
         positions.Add(frPos);
-        Vector3 blPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / yDivider), -((tablePos.z - tableScale.z / 2)) - legOffset);
+        Vector3 blPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / yDivider), ((tablePos.z + tableScale.z / 2)) - legOffset);
         positions.Add(blPos);
         Vector3 flPos = new Vector3(((tablePos.x - tableScale.x / 2) + legOffset), (legScale.y / yDivider), ((tablePos.z - tableScale.z / 2)) + legOffset);
         positions.Add(flPos);

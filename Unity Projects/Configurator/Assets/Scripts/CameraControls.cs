@@ -6,14 +6,12 @@ public class CameraControls : MonoBehaviour
 {
     public GameObject selectedObject;
     private Vector3 defaultCameraPos;
-    private Vector3 defaultCameraRot;
     private float desiredXRotation = 13f;
 
     void Start()
     {
         selectedObject = null;
         defaultCameraPos = transform.localPosition;
-        defaultCameraRot = transform.rotation.eulerAngles;
     }
 
     // If there is a selected object, zoom in and rotate the camera to focus on it
